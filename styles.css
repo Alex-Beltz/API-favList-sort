@@ -8,16 +8,16 @@ html,
 body {
   height: 100vh;
   width: 100%;
-  position: absolute;
-  all: 0;
+  /* position: absolute; */
+  /* all: 0; */
   margin: 0;
 }
 
 body {
-  display: flexbox;
+  /* display: flexbox;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  flex-direction: column; */
   text-align: center;
   background-color: #1d2378;
 }
@@ -35,25 +35,19 @@ div.favorites-list::-webkit-scrollbar-thumb {
   background-color: #000000;
 }
 
-body::-webkit-scrollbar-track,
+/* body::-webkit-scrollbar-track,
 div.main-list::-webkit-scrollbar-track,
 div.favorites-list::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   background-color: #f5f5f5;
-}
-
-div.button-container {
-}
-
-div.list-container.open {
-}
+} */
 
 div.list-container {
   max-width: 100%;
-  height: 500px;
+  height: 100vh;
   background-color: rgb(89, 79, 97);
-  margin: 20px;
+  margin-top: 50px;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -65,7 +59,7 @@ div.button-container {
   flex-direction: row;
   flex-wrap: wrap;
   gap: 10px;
-  max-width: 100rem;
+  max-width: 50rem;
   margin-top: 20px;
   height: fit-content;
 }
@@ -73,7 +67,6 @@ div.button-container {
 div.main-list,
 div.favorites-list {
   position: absolute;
-  /* height: 500px; */
   height: 100vh;
   width: 40%;
   overflow: scroll;
@@ -85,14 +78,12 @@ div.favorites-list {
 div.main-list {
   left: 0;
   background-color: rgb(98, 124, 135);
-  padding: 20px;
-  /* justify-self: flex-start; */
+  /* padding: 20px; */
 }
 
 div.favorites-list {
   right: 0;
   background-color: rgb(99, 145, 121);
-  /* justify-self: flex-end; */
 }
 
 div.main-list-item,
@@ -113,24 +104,6 @@ div.main-list-item {
 }
 div.main-list-item:hover {
   transition: transform 0.75s ease-in;
-}
-
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgb(60, 137, 105);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 36px;
-  color: rgb(166, 159, 150);
-  z-index: 100;
-  transition: transform 1.5s ease-in;
-  /* transform: rotateX(180deg); */
-  border-radius: 20px;
 }
 
 div.fav-list-item {
@@ -160,6 +133,7 @@ div.fav-item-info span {
   flex-direction: row;
   justify-content: space-between;
 }
+
 h3,
 h4,
 h5,
@@ -170,30 +144,27 @@ h6 {
   margin-right: 1rem;
   color: rgb(66, 40, 7);
 }
-
 h3.main-item-name {
   font-size: 0.75em;
 }
-h3.fav-item-name {
-}
-
 h4.main-item-age {
   font-size: 0.55em;
 }
-h4.fav-item-age {
-}
-
 h5.main-item-breed {
   font-size: 0.5em;
 }
-h5.main-item-breed {
+h3.fav-item-name {
+  font-size: 1.25em;
+}
+h4.fav-item-age,
+h5.fav-item-breed {
+  font-size: 1em;
 }
 
 div.main-item-pic,
 div.fav-item-pic {
   height: 100%;
   width: auto;
-  background-image: url(./assets/pics/mexicanhairless.jpg);
   background-size: contain;
   background-repeat: no-repeat;
   margin-left: auto;

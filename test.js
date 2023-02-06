@@ -15,12 +15,21 @@ const waitForDOMContentLoaded = () => {
   });
 };
 
-function buildMainList(data) {
-  const listContainer = document.querySelector(".list-container");
-  const mainList = document.querySelector(".main-list");
-  const favoritesList = document.querySelector(".favorites-list");
-  const buttonContainer = document.querySelector(".button-container");
+const listContainer = document.querySelector(".list-container");
+const mainList = document.querySelector(".main-list");
+const favoritesList = document.querySelector(".favorites-list");
+const buttonContainer = document.querySelector(".button-container");
 
+const sortButtonAZ = document.createElement("button");
+sortButtonAZ.innerHTML = "Sort favs (A-Z)";
+buttonContainer.appendChild(sortButtonAZ);
+
+const reverseCheckbox = document.createElement("input");
+reverseCheckbox.type = "checkbox";
+reverseCheckbox.title = "reverse";
+buttonContainer.appendChild(reverseCheckbox);
+
+function buildMainList(data) {
   data.data.forEach((dog) => {
     const mainListItem = document.createElement("div");
     mainListItem.classList.add("main-list-item");
@@ -71,9 +80,7 @@ function buildMainList(data) {
       }
     });
   });
-  const sortButtonAZ = document.createElement("button");
-  buttonContainer.appendChild(sortButtonAZ);
-  sortButtonAZ.innerHTML = "Sort favs (A-Z)";
+
   sortButtonAZ.addEventListener("click", () => {
     const favListItems = [...favoritesList.querySelectorAll(".fav-list-item")];
     favListItems.sort((a, b) => {
@@ -83,10 +90,14 @@ function buildMainList(data) {
     });
     if (reverseCheckbox.checked) {
       favListItems.reverse();
+      favListItems.forEach((item) => {
+        favoritesList.appendChild(item);
+      });
+    } else {
+      favListItems.forEach((item) => {
+        favoritesList.appendChild(item);
+      });
     }
-    favListItems.forEach((item) => {
-      favoritesList.appendChild(item);
-    });
   });
   listContainer.appendChild(buttonContainer);
 }

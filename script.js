@@ -124,6 +124,12 @@ function buildMainList(data) {
   const sortButtonAZ = document.createElement("button");
   buttonContainer.appendChild(sortButtonAZ);
   sortButtonAZ.innerHTML = "Sort favs (A-Z)";
+
+  const reverseCheckbox = document.createElement("input");
+  reverseCheckbox.type = "checkbox";
+  reverseCheckbox.title = "reverse";
+  buttonContainer.appendChild(reverseCheckbox);
+
   sortButtonAZ.addEventListener("click", () => {
     const favListItems = [...favoritesList.querySelectorAll(".fav-list-item")];
     favListItems.sort((a, b) => {
@@ -133,10 +139,14 @@ function buildMainList(data) {
     });
     if (reverseCheckbox.checked) {
       favListItems.reverse();
+      favListItems.forEach((item) => {
+        favoritesList.appendChild(item);
+      });
+    } else {
+      favListItems.forEach((item) => {
+        favoritesList.appendChild(item);
+      });
     }
-    favListItems.forEach((item) => {
-      favoritesList.appendChild(item);
-    });
   });
   listContainer.appendChild(buttonContainer);
 }

@@ -22,11 +22,9 @@ const buttonContainer = document.querySelector(".button-container");
 
 const sortButtonAZ = document.createElement("button");
 sortButtonAZ.innerHTML = "Sort favs (A-Z)";
-buttonContainer.appendChild(sortButtonAZ);
 
 const reverseFavList = document.createElement("button");
 reverseFavList.innerHTML = "Reverse Fav List";
-buttonContainer.appendChild(reverseFavList);
 
 const mainListTitle = document.createElement("h1");
 mainListTitle.innerHTML = "All Dogs-->";
@@ -35,7 +33,13 @@ mainListTitle.style.color = "rgb(0, 61, 39)";
 const favListTitle = document.createElement("h1");
 favListTitle.innerHTML = "<--Favorites List";
 favListTitle.style.color = "rgb(1, 21, 80)";
-buttonContainer.append(mainListTitle, favListTitle);
+
+buttonContainer.append(
+  mainListTitle,
+  favListTitle,
+  sortButtonAZ,
+  reverseFavList
+);
 
 listContainer.appendChild(buttonContainer);
 

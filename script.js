@@ -40,7 +40,6 @@ buttonContainer.append(
   sortButtonAZ,
   reverseFavList
 );
-
 listContainer.appendChild(buttonContainer);
 
 function buildMainList(data) {

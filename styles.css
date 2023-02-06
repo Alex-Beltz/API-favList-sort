@@ -2,6 +2,10 @@
 *::after,
 *::before {
   box-sizing: border-box;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Standard */
 }
 
 html,
@@ -108,6 +112,7 @@ div.fav-list-item:hover {
 
 div.main-list-item:hover:after {
   content: "Click to add to favorites list";
+  font-size: 0.5rem;
   position: absolute;
   top: 45px;
   left: 10px;
@@ -119,6 +124,7 @@ div.main-list-item:hover:after {
 }
 div.fav-list-item:hover:after {
   content: "Click to remove from favorites list";
+  font-size: 0.75rem;
   position: absolute;
   top: 70px;
   left: 10px;
@@ -185,11 +191,10 @@ div.fav-item-pic {
   background-size: contain;
   background-repeat: no-repeat;
   margin-left: auto;
+  border-radius: 10%;
 }
 
-div.main-item-pic {
-  min-width: 40%;
-}
+div.main-item-pic,
 div.fav-item-pic {
-  min-width: 40%;
+  min-width: 25%;
 }

@@ -21,10 +21,10 @@ const favoritesList = document.querySelector(".favorites-list");
 const buttonContainer = document.querySelector(".button-container");
 
 const sortButtonAZ = document.createElement("button");
-sortButtonAZ.innerHTML = "Sort favs (A-Z)";
+sortButtonAZ.innerHTML = "Sort favorites (A-Z)";
 
 const reverseFavList = document.createElement("button");
-reverseFavList.innerHTML = "Reverse Fav List";
+reverseFavList.innerHTML = "Reverse order";
 
 const mainListTitle = document.createElement("h1");
 mainListTitle.innerHTML = "All Dogs-->";

@@ -31,6 +31,7 @@
   div.main-list-item,
   div.fav-list-item {
     flex-direction: column;
+    margin: 10px;
   }
 
   div.main-item-info,

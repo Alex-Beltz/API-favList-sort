@@ -37,7 +37,7 @@
   div.main-item-info,
   div.fav-item-info {
     width: 100%;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-evenly;
     margin-bottom: 1rem;
   }

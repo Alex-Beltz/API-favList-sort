@@ -11,41 +11,58 @@ async function fetchData() {
 
 const waitForDOMContentLoaded = () => {
   window.addEventListener("DOMContentLoaded", () => {
-    fetchData().then(buildMainList);
+    fetchData().then((data) => buildMainList(data));
   });
 };
 
-const listContainer = document.querySelector(".list-container");
+const body = document.querySelector(".body");
 const mainList = document.querySelector(".main-list");
 const favoritesList = document.querySelector(".favorites-list");
 const buttonContainer = document.querySelector(".button-container");
 
-const sortButtonAZ = document.createElement("button");
-sortButtonAZ.innerHTML = "Sort favorites (A-Z)";
+const sortBtnAZ = document.createElement("button");
+sortBtnAZ.innerHTML = "Sort favorites (A-Z)";
+sortBtnAZ.setAttribute("data-sort", "asc");
 
-const reverseFavList = document.createElement("button");
-reverseFavList.innerHTML = "Reverse order";
+const sortBtnZA = document.createElement("button");
+sortBtnZA.innerHTML = "Sort favorites (Z-A)";
+sortBtnZA.setAttribute("data-sort", "desc");
 
-const mainListTitle = document.createElement("h1");
-mainListTitle.innerHTML = "All Dogs-->";
-mainListTitle.style.color = "rgb(0, 61, 39)";
+const mainCount = document.createElement("div");
+mainCount.classList.add("main-count");
 
-const favListTitle = document.createElement("h1");
-favListTitle.innerHTML = "<--Favorites List";
-favListTitle.style.color = "rgb(1, 21, 80)";
+const favCount = document.createElement("div");
+favCount.classList.add("fav-count");
 
-buttonContainer.append(
-  mainListTitle,
-  favListTitle,
-  sortButtonAZ,
-  reverseFavList
-);
-listContainer.appendChild(buttonContainer);
+buttonContainer.append(sortBtnAZ, sortBtnZA, mainCount, favCount);
+body.appendChild(buttonContainer);
+
+let mainOverEight = 0;
+let mainUnderEight = 0;
+let favOverEight = 0;
+let favUnderEight = 0;
+
+function countAge(list, overEight, underEight) {
+  list.querySelectorAll(".main-item-age, .fav-item-age").forEach((age) => {
+    const ageValue = parseInt(age.textContent);
+    if (ageValue > 8) {
+      overEight++;
+    } else {
+      underEight++;
+    }
+  });
+}
+
+function updateCountDisplay() {
+  mainCount.innerHTML = `Dogs Over 8 y/o: ${mainOverEight} Dogs 8 y/o & Under: ${mainUnderEight}`;
+  favCount.innerHTML = `Dogs Over 8 y/o: ${favOverEight} Dogs 8 y/o & Under: ${favUnderEight}`;
+}
 
 function buildMainList(data) {
   data.data.forEach((dog) => {
     const mainListItem = document.createElement("div");
     mainListItem.classList.add("main-list-item");
+
     mainListItem.innerHTML = `
         <div class="main-item-info">
           <span>
@@ -61,35 +78,49 @@ function buildMainList(data) {
             <h5 class="main-item-breed">${dog.breed}</h5>
           </span>
         </div>
-        <div class="main-item-pic" style="background-image: url(${dog.photoUrl})"></div>
-      `;
+        `;
+
+    const imageLayer = document.createElement("div");
+    imageLayer.classList.add("imageLayer");
+    imageLayer.style.backgroundImage = `url(${dog.photoUrl})`;
+    imageLayer.style.zIndex = "0";
+
+    mainListItem.appendChild(imageLayer);
+
     mainList.appendChild(mainListItem);
-    listContainer.appendChild(mainList);
+    body.appendChild(mainList);
+
+    mainListItem.addEventListener("mouseover", () => {
+      imageLayer.style.opacity = "0.25";
+    });
+
+    mainListItem.addEventListener("mouseout", () => {
+      imageLayer.style.display = "block";
+      imageLayer.style.opacity = "1";
+    });
 
     mainListItem.addEventListener("click", () => {
-      moveItemsToTheOtherList(mainListItem);
+      moveItem(mainListItem);
     });
   });
 }
 
-function moveItemsToTheOtherList(mainListItem) {
+const classReplace = (str, array) => {
+  array
+    .querySelector(`.main-item-${str}`)
+    .classList.replace(`main-item-${str}`, `fav-item-${str}`);
+};
+
+function moveItem(mainListItem) {
   if (mainListItem.parentNode === mainList) {
     mainListItem.remove();
     const favListItem = mainListItem.cloneNode(true);
     favListItem.classList.remove("main-list-item");
     favListItem.classList.add("fav-list-item");
-    favListItem
-      .querySelector(".main-item-name")
-      .classList.replace("main-item-name", "fav-item-name");
-    favListItem
-      .querySelector(".main-item-age")
-      .classList.replace("main-item-age", "fav-item-age");
-    favListItem
-      .querySelector(".main-item-breed")
-      .classList.replace("main-item-breed", "fav-item-breed");
-    favListItem
-      .querySelector(".main-item-pic")
-      .classList.replace("main-item-pic", "fav-item-pic");
+
+    ["name", "age", "breed"].forEach((prop) => {
+      classReplace(prop, favListItem);
+    });
 
     favListItem.addEventListener("click", () => {
       favListItem.remove();
@@ -99,39 +130,28 @@ function moveItemsToTheOtherList(mainListItem) {
   }
 }
 
-sortButtonAZ.addEventListener("click", () => {
-  sortFavList();
+[sortBtnAZ, sortBtnZA].forEach((button) => {
+  const direction = button.dataset.sort;
+  button.addEventListener("click", () => {
+    sortFavList(direction);
+  });
 });
 
-const sortFavList = () => {
+const sortFavList = (dir) => {
   const favListItems = [...favoritesList.querySelectorAll(".fav-list-item")];
   favListItems.sort((a, b) => {
     const nameA = a.querySelector(".fav-item-name").innerHTML;
     const nameB = b.querySelector(".fav-item-name").innerHTML;
-    return nameA.localeCompare(nameB);
+    if (nameA < nameB) {
+      return dir === "asc" ? -1 : 1;
+    }
+    if (nameA > nameB) {
+      return dir === "asc" ? 1 : -1;
+    }
   });
   favListItems.forEach((item) => {
     favoritesList.appendChild(item);
   });
 };
-
-const reverseFavListOrder = () => {
-  const favListItems = [...favoritesList.querySelectorAll(".fav-list-item")];
-  favListItems.reverse();
-  favListItems.forEach((item) => {
-    favoritesList.appendChild(item);
-  });
-};
-
-let isReverse = false;
-reverseFavList.addEventListener("click", () => {
-  if (isReverse) {
-    sortFavList();
-    isReverse = false;
-  } else {
-    reverseFavListOrder();
-    isReverse = true;
-  }
-});
 
 waitForDOMContentLoaded();

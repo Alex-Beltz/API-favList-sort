@@ -1,13 +1,27 @@
+const messageCont = document.createElement("div");
+messageCont.style.cssText = `
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  background-color: #4f3608;
+`;
 const message = document.createElement("h1");
-message.style.fontSize = "48px";
-message.style.textAlign = "center";
-message.style.position = "fixed";
-message.style.top = "50%";
-message.style.left = "50%";
-message.style.transform = "translate(-50%, -50%)";
+message.style.cssText = `
+  font-size: 48px;
+  color: white;
+  text-align: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
 message.textContent =
-  "Click any dog item to add to favorites list, or to remove back to the main list.  Press any key to continue";
-document.body.appendChild(message);
+  "Click any dog to add them to the favorites list, or to add them back to the main list. Press any key to continue";
+messageCont.appendChild(message);
+document.body.appendChild(messageCont);
 
 async function fetchData() {
   try {
@@ -22,7 +36,7 @@ async function fetchData() {
 
 const waitForKeyPress = () => {
   window.addEventListener("keydown", () => {
-    document.body.removeChild(message);
+    document.body.removeChild(messageCont);
     fetchData().then((data) => buildMainList(data));
   });
 };
@@ -92,9 +106,7 @@ function buildMainList(data) {
     imageLayer.classList.add("imageLayer");
     imageLayer.style.backgroundImage = `url(${dog.photoUrl})`;
     imageLayer.style.zIndex = "0";
-
     mainListItem.appendChild(imageLayer);
-
     mainList.appendChild(mainListItem);
     body.appendChild(mainList);
 
@@ -142,11 +154,10 @@ function updateCount() {
   const mainListOver8 = mainListItems.filter(
     (item) => Number(item.querySelector(".main-item-age").textContent) > 8
   );
-  console.log(mainListOver8);
+
   const favListOver8 = favListItems.filter(
     (item) => Number(item.querySelector(".fav-item-age").textContent) > 8
   );
-  console.log(favListOver8);
 
   document.querySelector(
     ".main-count"

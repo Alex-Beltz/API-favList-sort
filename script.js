@@ -1,3 +1,14 @@
+const message = document.createElement("h1");
+message.style.fontSize = "48px";
+message.style.textAlign = "center";
+message.style.position = "fixed";
+message.style.top = "50%";
+message.style.left = "50%";
+message.style.transform = "translate(-50%, -50%)";
+message.textContent =
+  "Click any dog item to add to favorites list, or to remove back to the main list.  Press any key to continue";
+document.body.appendChild(message);
+
 async function fetchData() {
   try {
     const response = await fetch(
@@ -9,54 +20,51 @@ async function fetchData() {
   }
 }
 
-const waitForDOMContentLoaded = () => {
-  window.addEventListener("DOMContentLoaded", () => {
+const waitForKeyPress = () => {
+  window.addEventListener("keydown", () => {
+    document.body.removeChild(message);
     fetchData().then((data) => buildMainList(data));
   });
 };
 
 const body = document.querySelector(".body");
 const mainList = document.querySelector(".main-list");
-const favoritesList = document.querySelector(".favorites-list");
+const favList = document.querySelector(".fav-list");
 const buttonContainer = document.querySelector(".button-container");
 
-const sortBtnAZ = document.createElement("button");
-sortBtnAZ.innerHTML = "Sort favorites (A-Z)";
-sortBtnAZ.setAttribute("data-sort", "asc");
+const createHeader = (headerClass, titleText, countClass) => {
+  const header = document.createElement("div");
+  header.classList.add(headerClass);
+  const title = document.createElement("h1");
+  title.innerHTML = titleText;
+  const count = document.createElement("div");
+  count.classList.add(countClass);
+  header.append(title, count);
+  return header;
+};
 
-const sortBtnZA = document.createElement("button");
-sortBtnZA.innerHTML = "Sort favorites (Z-A)";
-sortBtnZA.setAttribute("data-sort", "desc");
+const favListHeader = createHeader(
+  "fav-header",
+  `<i class="fas fa-arrow-left"></i> Favorites List`,
+  "fav-count"
+);
+const mainListHeader = createHeader(
+  "main-header",
+  `Main List <i class="fas fa-arrow-right"></i>`,
+  "main-count"
+);
 
-const mainCount = document.createElement("div");
-mainCount.classList.add("main-count");
+const createSortBtn = (text, dataAtr, dir) => {
+  const btn = document.createElement("button");
+  btn.innerHTML = text;
+  btn.setAttribute(dataAtr, dir);
+  return btn;
+};
+const sortBtnAZ = createSortBtn("Sort favorites (A-Z)", "data-sort", "asc");
+const sortBtnZA = createSortBtn("Sort favorites (Z-A)", "data-sort", "desc");
 
-const favCount = document.createElement("div");
-favCount.classList.add("fav-count");
-
-buttonContainer.append(sortBtnAZ, sortBtnZA, mainCount, favCount);
+buttonContainer.append(sortBtnAZ, sortBtnZA, mainListHeader, favListHeader);
 body.appendChild(buttonContainer);
-
-let mainOverEight = 0;
-let mainUnderEight = 0;
-let favOverEight = 0;
-let favUnderEight = 0;
-
-function countAge(list, overEight, underEight) {
-  list.querySelectorAll(".main-item-age, .fav-item-age").forEach((age) => {
-    const ageValue = parseInt(age.textContent);
-    if (ageValue > 8) {
-      overEight++;
-    } else {
-      underEight++;
-    }
-  });
-}
-
-function updateCountDisplay() {
-  mainCount.innerHTML = `Dogs Over 8 y/o: ${mainOverEight} Dogs 8 y/o & Under: ${mainUnderEight}`;
-  favCount.innerHTML = `Dogs Over 8 y/o: ${favOverEight} Dogs 8 y/o & Under: ${favUnderEight}`;
-}
 
 function buildMainList(data) {
   data.data.forEach((dog) => {
@@ -64,21 +72,21 @@ function buildMainList(data) {
     mainListItem.classList.add("main-list-item");
 
     mainListItem.innerHTML = `
-        <div class="main-item-info">
-          <span>
-            <h6>name:</h6>
-            <h3 class="main-item-name">${dog.name}</h3>
-          </span>
-          <span>
-            <h6>age:</h6>
-            <h4 class="main-item-age">${dog.age}</h4>
-          </span>
-          <span>
-            <h6>breed:</h6>
-            <h5 class="main-item-breed">${dog.breed}</h5>
-          </span>
-        </div>
-        `;
+          <div class="main-item-info">
+            <span>
+              <h6>name:</h6>
+              <h3 class="main-item-name">${dog.name}</h3>
+            </span>
+            <span>
+              <h6>age:</h6>
+              <h4 class="main-item-age">${dog.age}</h4>
+            </span>
+            <span>
+              <h6>breed:</h6>
+              <h5 class="main-item-breed">${dog.breed}</h5>
+            </span>
+          </div>
+          `;
 
     const imageLayer = document.createElement("div");
     imageLayer.classList.add("imageLayer");
@@ -98,36 +106,63 @@ function buildMainList(data) {
       imageLayer.style.display = "block";
       imageLayer.style.opacity = "1";
     });
-
     mainListItem.addEventListener("click", () => {
       moveItem(mainListItem);
     });
   });
 }
 
-const classReplace = (str, array) => {
-  array
-    .querySelector(`.main-item-${str}`)
-    .classList.replace(`main-item-${str}`, `fav-item-${str}`);
+const classReplace = (from, to, prop, item) => {
+  item
+    .querySelector(`.${from}-item-${prop}`)
+    .classList.replace(`${from}-item-${prop}`, `${to}-item-${prop}`);
 };
 
-function moveItem(mainListItem) {
-  if (mainListItem.parentNode === mainList) {
-    mainListItem.remove();
-    const favListItem = mainListItem.cloneNode(true);
-    favListItem.classList.remove("main-list-item");
-    favListItem.classList.add("fav-list-item");
+const moveItem = (item) => {
+  const fromList = favList.contains(item) ? "fav" : "main";
+  const toList = fromList === "fav" ? "main" : "fav";
 
-    ["name", "age", "breed"].forEach((prop) => {
-      classReplace(prop, favListItem);
-    });
+  document.querySelector(`.${fromList}-list`).removeChild(item);
+  item.classList.remove(`${fromList}-list-item`);
 
-    favListItem.addEventListener("click", () => {
-      favListItem.remove();
-      mainList.appendChild(mainListItem);
-    });
-    favoritesList.appendChild(favListItem);
-  }
+  ["info", "name", "age", "breed"].forEach((prop) => {
+    classReplace(fromList, toList, prop, item);
+  });
+
+  item.classList.add(`${toList}-list-item`);
+  document.querySelector(`.${toList}-list`).appendChild(item);
+
+  updateCount();
+};
+
+function updateCount() {
+  const mainListItems = [...mainList.querySelectorAll(".main-list-item")];
+  const favListItems = [...favList.querySelectorAll(".fav-list-item")];
+
+  const mainListOver8 = mainListItems.filter(
+    (item) => Number(item.querySelector(".main-item-age").textContent) > 8
+  );
+  console.log(mainListOver8);
+  const favListOver8 = favListItems.filter(
+    (item) => Number(item.querySelector(".fav-item-age").textContent) > 8
+  );
+  console.log(favListOver8);
+
+  document.querySelector(
+    ".main-count"
+  ).innerHTML = `Dogs Over 8 y/o: <span style="font-size: 1.5rem; font-weight: bold;">${
+    mainListOver8.length
+  }</span><br> Dogs 8 y/o & Under: <span style="font-size: 1.5rem; font-weight: bold;">${
+    mainListItems.length - mainListOver8.length
+  }</span>`;
+
+  document.querySelector(
+    ".fav-count"
+  ).innerHTML = `Dogs Over 8 y/o: <span style="font-size: 1.5rem; font-weight: bold;">${
+    favListOver8.length
+  }</span><br> Dogs 8 y/o & Under: <span style="font-size: 1.5rem; font-weight: bold;">${
+    favListItems.length - favListOver8.length
+  }</span>`;
 }
 
 [sortBtnAZ, sortBtnZA].forEach((button) => {
@@ -138,7 +173,7 @@ function moveItem(mainListItem) {
 });
 
 const sortFavList = (dir) => {
-  const favListItems = [...favoritesList.querySelectorAll(".fav-list-item")];
+  const favListItems = [...favList.querySelectorAll(".fav-list-item")];
   favListItems.sort((a, b) => {
     const nameA = a.querySelector(".fav-item-name").innerHTML;
     const nameB = b.querySelector(".fav-item-name").innerHTML;
@@ -150,8 +185,8 @@ const sortFavList = (dir) => {
     }
   });
   favListItems.forEach((item) => {
-    favoritesList.appendChild(item);
+    favList.appendChild(item);
   });
 };
 
-waitForDOMContentLoaded();
+setTimeout(waitForKeyPress, 2000);

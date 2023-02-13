@@ -10,26 +10,27 @@
 
 html,
 body {
-  height: 100vh;
+  height: 95vh;
   width: 100%;
   margin: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #165412;
-  padding-top: 100px;
+  background-color: #997636;
+  padding-top: 10px;
+  position: relative;
 }
 
 body::-webkit-scrollbar,
 div.main-list::-webkit-scrollbar,
-div.favorites-list::-webkit-scrollbar {
-  width: 0.5em;
+div.fav-list::-webkit-scrollbar {
+  width: 0em;
 }
 
 body::-webkit-scrollbar-thumb,
 div.main-list::-webkit-scrollbar-thumb,
-div.favorites-list::-webkit-scrollbar-thumb {
-  background-color: #000000;
+div.fav-list::-webkit-scrollbar-thumb {
+  background-color: transparent;
   border-radius: 50px;
 }
 
@@ -38,15 +39,20 @@ div.button-container {
   flex-direction: column;
   flex-wrap: wrap;
   gap: 10px;
-  width: 5rem;
+  width: 20%;
   margin: 20px;
   height: fit-content;
+  padding: auto 10px auto 10px;
+  border-radius: 50px;
 }
 
 div.button-container button {
   background-color: rgb(177, 124, 54);
   border-radius: 50px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  padding: 5px;
+  color: #eac5b1;
+  font-weight: 700;
 }
 
 div.button-container button:hover {
@@ -55,29 +61,27 @@ div.button-container button:hover {
 }
 
 div.main-list,
-div.favorites-list {
+div.fav-list {
   display: flex;
-  justify-content: space-evenly;
   align-items: center;
   flex-direction: column;
   overflow: scroll;
   border-radius: 50px;
-  height: fit-content;
-  padding: 25px 50px 25px 50px;
+  height: 100%;
+  padding: 10px;
+  align-content: flex-start;
 }
 
 div.main-list {
-  width: 35%;
+  width: 30%;
   justify-self: flex-start;
   align-self: flex-start;
-  background-color: #306526;
 }
 
-div.favorites-list {
-  width: 55%;
+div.fav-list {
+  width: 50%;
   justify-self: flex-end;
   align-self: flex-start;
-  background-color: #306526;
 }
 
 div.main-list-item,
@@ -121,6 +125,41 @@ div.fav-list-item:hover {
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
 }
 
+.main-header,
+.fav-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  background-color: rgb(203 162 98);
+  height: 200px;
+  width: 100%;
+  border-radius: 20px;
+  padding: 5px;
+  text-align: center;
+}
+
+.main-header h1,
+.fav-header h1 {
+  color: rgb(120 86 58);
+  border-radius: 20px;
+  padding: 5px;
+  text-align: center;
+}
+
+.main-header h1 {
+}
+
+.fav-header h1 {
+}
+
+.main-count,
+.fav-count {
+  height: 40%;
+  width: 95%;
+  color: #a86428;
+}
+
 div.main-item-info,
 div.fav-item-info {
   width: 50%;
@@ -130,7 +169,8 @@ div.fav-item-info {
 
 div.main-item-info,
 div.fav-item-info {
-  width: 45%;
+  width: 100%;
+  text-align: center;
 }
 div.main-item-info {
   justify-content: space-between;
@@ -149,29 +189,38 @@ h5,
 h6 {
   margin: 0;
 }
-h6 {
-  margin-right: 1rem;
-  color: rgb(19, 63, 4);
+
+h3,
+h4,
+h5 {
+  color: #1e0d01;
 }
-.favorites-list h6 {
-  margin-right: 3rem;
-  color: rgb(14, 41, 5);
+h6 {
+  margin-right: 4rem;
+  color: rgb(222 185 144);
+}
+.fav-list h6 {
+  margin-right: 4rem;
+  font-size: 2rem;
+}
+.main-list h6 {
+  font-size: 1.5em;
 }
 h3.main-item-name {
-  font-size: 0.75em;
+  font-size: 1.75em;
 }
 h4.main-item-age {
-  font-size: 0.55em;
+  font-size: 1.55em;
 }
 h5.main-item-breed {
-  font-size: 0.5em;
+  font-size: 1.5em;
 }
 h3.fav-item-name {
-  font-size: 1.25em;
+  font-size: 3em;
 }
 h4.fav-item-age,
 h5.fav-item-breed {
-  font-size: 1em;
+  font-size: 2.5em;
 }
 
 div.main-item-pic,
